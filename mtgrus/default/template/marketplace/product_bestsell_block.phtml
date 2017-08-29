@@ -1,0 +1,28 @@
+<?php
+		$products=$this->getBestsellProducts();
+		if(count($products)>0) {
+		?>
+<div class="label">
+	<h2><?php echo Mage::helper('marketplace')->__('Latest Product Added') ?></h2>
+</div>
+<div class="best-sell-product1">	
+<?php
+		foreach($products as $productid ){
+			$_product=Mage::getModel('catalog/product')->load($productid);
+			$stockItem = Mage::getModel('cataloginventory/stock_item');
+			$stockItem->loadByProduct($productid);
+			if($stockItem->getData('is_in_stock') == 1 && $_product->getStatus()==1){ ?>
+		<div class="">
+			<a href="<?php echo $_product->getProductUrl()?>">
+				<div class="image">
+					<img src=<?php echo Mage::helper('catalog/image')->init($_product, 'image')->resize(185);?> />
+				</div>
+				<div class="name"><?php echo $_product->getName() ?></div>
+			</a>
+			<div class="price"><?php echo ("$".substr_replace($_product->getPrice(),"",-2)) ?></div>
+		</div>
+		<?php }
+		}
+	?>
+	</div>
+		<?php }  ?>

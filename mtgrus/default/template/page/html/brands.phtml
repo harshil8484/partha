@@ -1,0 +1,34 @@
+<?php
+$product = Mage::getModel('catalog/product');
+$attributes = Mage::getResourceModel('eav/entity_attribute_collection')
+                  ->setEntityTypeFilter($product->getResource()->getTypeId())
+                  ->addFieldToFilter('attribute_code', 'brand');
+$attribute = $attributes->getFirstItem()->setEntity($product->getResource());
+$manufacturers = $attribute->getSource()->getAllOptions(true,true);
+$attribute = Mage::getModel('eav/config')->getAttribute('catalog_product', 'brand');
+
+?>
+
+<div class="brandLogoWrapper">
+    <?php $connection = Mage::getModel('core/resource')->getConnection('core_read');
+$sql = 'SELECT * FROM `eav_attribute_option`';
+$option_images = $connection->fetchAll($sql);
+ $catId = Mage::getModel('catalog/layer')->getCurrentCategory()->getId(); 
+ $category = Mage::getModel('catalog/category')->load($catId); 
+ $catUrl = $category->getUrl(); 
+ 
+ foreach ($option_images as $option_image) { 
+ $imapath=$option_image['image'];
+ if($imapath){
+ ?>
+ <a class="trackClickPage small-6 medium-3 column" data-click="hp_brands_1_alegria" href="<?php echo $catUrl.'?brand='.$option_image['option_id'] ?>">
+
+<img class="removeTopBorder removeLeftBorder" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'media/'.$imapath; ?>"> 
+</a>
+
+ <?php } 
+
+ 
+ } ?>
+
+</div>

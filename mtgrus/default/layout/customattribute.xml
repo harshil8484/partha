@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<marketplace_account_simpleproduct>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>
+		</reference>
+		<block name="marketplace_addproduct">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/newcustomattribute.phtml"/>
+		</block>
+    </marketplace_account_simpleproduct>
+    <marketplace_marketplaceaccount_new>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>
+		</reference>
+		<block name="marketplace_addproduct">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/newcustomattribute.phtml"/>
+		</block>
+    </marketplace_marketplaceaccount_new>
+    <marketplace_marketplaceaccount_editapprovedsimple>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>	
+		</reference>
+		<block name="marketplace_editproducts">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/editcustomattribute.phtml"/>
+		</block>
+    </marketplace_marketplaceaccount_editapprovedsimple>
+	<mpbundleproduct_index_editbundle>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>	
+		</reference>
+		<block name="marketplace_editproducts">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/editcustomattribute.phtml"/>
+		</block>
+    </mpbundleproduct_index_editbundle>
+	
+	<marketplace_marketplaceaccount_editapproveddownloadable>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>	
+		</reference>
+		<block name="marketplace_editproducts">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/editcustomattribute.phtml"/>
+		</block>
+    </marketplace_marketplaceaccount_editapproveddownloadable>
+	
+	<!--marketplace_marketplaceaccount_virtualproduct>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>
+		</reference>
+		<block name="marketplace_addproduct">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/newcustomattribute.phtml"/>
+		</block>
+    </marketplace_marketplaceaccount_virtualproduct-->
+	
+	<marketplace_marketplaceaccount_editapprovedvirtual>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>	 
+		</reference>
+		<block name="marketplace_editproducts">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/editcustomattribute.phtml"/>
+		</block>
+    </marketplace_marketplaceaccount_editapprovedvirtual>
+
+    <!--marketplace_account_configurableproduct>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>
+		</reference>
+		<block name="marketplace_addproduct">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/newcustomattribute.phtml"/>
+		</block>
+    </marketplace_account_configurableproduct-->
+
+    <marketplace_marketplaceaccount_editapprovedconfigurable>
+		<reference name="head">
+			<action method="addCss"><stylesheet>marketplace/css/customattribute.css</stylesheet></action>	 
+		</reference>
+		<block name="marketplace_editproducts">
+			<block type="core/template" name="marketplace_customattribute" template="customattribute/editcustomattribute.phtml"/>
+		</block>
+    </marketplace_marketplaceaccount_editapprovedconfigurable>
+    <marketplace_marketplaceaccount_new>
+		<block name="mpmassuplaodaddons">
+			<block type="core/template" name="customattributemassuload" template="customattribute/formassupload.phtml"/>
+		</block>
+    </marketplace_marketplaceaccount_new>
+
+</layout>

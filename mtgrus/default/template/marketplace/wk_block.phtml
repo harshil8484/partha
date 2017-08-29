@@ -1,0 +1,127 @@
+<?php 
+	$_product=Mage::registry('current_product');
+	$productowner=Mage::getModel('marketplace/product')->isCustomerProduct($_product['entity_id']);
+	if($productowner['userid']!=""){
+		$rowsocial=Mage::getModel('marketplace/userprofile')->getPartnerProfileById($productowner['userid']);
+?>
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+		document.write(unescape("%3Cscript src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script> 
+<div class="block wk-block block-viewed">
+	<div class="block-title"><strong><span>
+	<?php 	if($rowsocial['shoptitle']!='')
+			echo $rowsocial['shoptitle'];
+		else
+			echo  $rowsocial['profileurl']; ?>
+	</span></strong></div>
+	<div class="block-content">
+		<div class="wk_blockdetail">	
+			<ul class="partnerlinks"> 
+				<li>
+					<a href="<?php echo  Mage::getUrl('marketplace/seller/collection').$rowsocial['profileurl'] ?>" title="<?php echo Mage::helper('marketplace')->__('Visit Complete Collection') ?>" id="siteconnect"><?php echo Mage::helper('marketplace')->__('View Collection') ?></a>
+				</li>
+				<li class="profile-view">
+					<a href="<?php echo  Mage::getUrl()."marketplace/seller/profile/".$rowsocial['profileurl'] ?>" title="<?php echo Mage::helper('marketplace')->__('Visit Profile') ?>" id="profileconnect"><?php echo Mage::helper('marketplace')->__('View Profile') ?></a>
+					<div class="wk-block-hover-div">
+						<div class="arrow"></div>
+						<?php echo $rowsocial['compdesi']; ?>
+					</div>
+				</li>
+				<li class="ask_que">
+					<a title="<?php echo Mage::helper('marketplace')->__('Ask Que') ?>" id="askque"><?php echo Mage::helper('marketplace')->__('Ask Que') ?></a>
+					<div id="ask_data">
+						<div class="modal_header">
+							<h3><?php echo Mage::helper('marketplace')->__('Ask Question to me') ?>..</h3>
+							<span  class="wk_close" >x</span>
+							<span  class="wk_clear" ></span>
+						</div>
+						<form id="ask_form" method="post" >
+							<span class="label"><?php echo Mage::helper('marketplace')->__('Email') ?> :</span><input type="text" name="email" class="queryemail"/>
+							<span class="label"><?php echo Mage::helper('marketplace')->__('Subject') ?> :</span><input type="text" name="subject" class="querysubject"/>
+							<span class="label"> <?php echo Mage::helper('marketplace')->__('Ask') ?> :</span><textarea  name="ask" class="queryquestion"></textarea>
+							<input type="hidden" name="product-id" value="<?php echo $_product['entity_id'];?>" />
+							<input type="hidden" name="seller-id" value="<?php echo $productowner['userid'];?>"/>
+							<div class="modal_footer">
+								<span class="error"></span>
+								<span class="errormail"></span>
+								<input type="reset" value="<?php echo Mage::helper('marketplace')->__('Reset') ?>" id="resetbtn"/>
+								<input type="button" value="<?php echo Mage::helper('marketplace')->__('Ask') ?>" id="askbtn"/>
+								<span class="wk_clear"></span>
+							</div>
+						</form>
+					</div>
+				</li>								
+				<?php echo $this->getChildHtml();?>
+				<li>
+					<a target="_blank" href="http://www.facebook.com/<?php echo $rowsocial['facebookid']; ?>" title="Link Up With Facebook" id="fbconnect"></a>
+					<a target="_blank"  href="http://www.twitter.com/<?php echo $rowsocial['twitterid']; ?>" title="Link Up With Twitter"id="twconnect"></a>
+				</li>
+			</ul>
+		</div>
+	</div>	
+</div>
+<script>
+	$wk_jq=jQuery.noConflict();
+	$wk_jq(function(){
+		$wk_jq('.wk-block-hover-div').prepend($wk_jq('<a />').attr('href','<?php echo  Mage::getUrl()."marketplace/seller/profile/".$rowsocial['profileurl'] ?>')
+							.append($wk_jq('<img />').addClass('hover-bannerpicrs').attr('src','<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'avatar/'.$rowsocial['logopic']; ?>')));
+		
+		$wk_jq('#ask_form').delegate('input,textarea','focus',function(){
+			$wk_jq(this).removeClass('error_border');
+		});
+		$wk_jq('.wrapper').append($wk_jq('#ask_data'));
+		$wk_jq('.ask_que').click(function(){
+			$wk_jq('#ask_form input,#ask_form textarea').removeClass('error_border');
+			$wk_jq('.page').css('opacity','0.4');
+			$wk_jq('#ask_data').show();
+		});
+		$wk_jq('.wk_close').click(function(){
+			$wk_jq('.page').css('opacity','1');
+			$wk_jq('#resetbtn').trigger('click');
+			$wk_jq('#ask_data').hide();
+		});
+		
+		$wk_jq('#askbtn').click(function(){
+			if(!validateEmail($wk_jq('.queryemail').val())){
+				$wk_jq(this).addClass('error_border');
+				$wk_jq('#ask_form .errormail').text("<?php echo Mage::helper('marketplace')->__('Enter valid email Id') ?>").slideDown('slow').delay(2000).slideUp('slow');
+			}
+			else{
+				var f=0;
+				$wk_jq('#ask_form input,#ask_form textarea').each(function(){
+					if($wk_jq(this).val()==''){
+						$wk_jq(this).addClass('error_border');
+						f++;
+					}
+				});
+				if(f>0){
+					$wk_jq('#ask_form .error').text("<?php echo Mage::helper('marketplace')->__('Fill all the fields') ?>").slideDown('slow').delay(2000).slideUp('slow');
+				}else{	
+					$wk_jq('#ask_data').addClass('mail_procss');
+					$wk_jq.ajax({
+						url:'<?php echo Mage::getBaseUrl();?>marketplace/seller/sendmail',
+						data:$wk_jq('#ask_form').serialize(),
+						type:'post',
+						dataType:'json',
+						success:function(d){
+							$wk_jq('#ask_data').removeClass('mail_procss')
+							alert("<?php echo Mage::helper('marketplace')->__('Mail Send') ?>..");
+							$wk_jq('.wk_close,#resetbtn').trigger('click');
+						}
+					});
+				}	
+			}
+		});
+	});
+	function validateEmail($email) {
+	  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+	  if( !emailReg.test( $email ) ) {
+		return false;
+	  } else {
+		return true;
+	  }
+	}
+</script>
+<?php } ?>

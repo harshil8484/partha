@@ -1,0 +1,12 @@
+<div class="page-title">
+    <h1><?php echo $this->__('Your order has been received.') ?></h1>
+</div>
+<?php $id =   Mage::getSingleton('core/session')->getOrderid(); ?>
+
+<?php if ($id){?>
+    <p><?php echo $this->__('Your order # is: %s.', $id) ?></p>
+<p><?php echo $this->__('You will receive an order confirmation email with details of your order ') ?></p>
+    <?php  Mage::getSingleton('core/session')->setOrderid(null); ?>
+<?php }else{
+    Mage::app()->getResponse()->setRedirect('checkout/cart');
+}?>

@@ -1,0 +1,76 @@
+<?php
+if(!Mage::getSingleton('customer/session')->isLoggedIn()){
+    Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
+}
+?>
+<div class="account-create">
+    <div class="page-title">
+        <h1><?php echo $this->__('Click & Collect From Store') ?></h1>
+    </div>
+    <form action="<?php echo $this->getUrl('customattribute/clickcollect/clickcollect') ?>" method="post" id="form-validate-clickout">
+        <div class="fieldset">
+            <h2 class="legend"><?php echo $this->__('Order Details') ?></h2>
+            <ul class="form-list">
+<!--                <li class="fields">-->
+<!--                    <label for="telephone" class="required"><em>*</em>--><?php //echo $this->__('First Name') ?><!--</label>-->
+<!--                    <div class="input-box">-->
+<!--                        <input type="text" name="firstname" id="firstname" value="" title="--><?php //echo $this->__('First Name') ?><!--" class="input-text required-entry" />-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--                <li class="fields">-->
+<!--                    <label for="telephone" class="required"><em>*</em>--><?php //echo $this->__('Last Name') ?><!--</label>-->
+<!--                    <div class="input-box">-->
+<!--                        <input type="text" name="lastname" id="lastname" value="" title="--><?php //echo $this->__('Last Name') ?><!--" class="input-text required-entry" />-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--                <li class="fields">-->
+<!--                    <label for="telephone" class="required"><em>*</em>--><?php //echo $this->__('Telephone') ?><!--</label>-->
+<!--                    <div class="input-box">-->
+<!--                        <input type="text" name="telephone" id="telephone" value="" title="--><?php //echo $this->__('Telephone') ?><!--" class="input-text required-entry" />-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--                <li class="fields">-->
+<!--                    <label for="email_address" class="required"><em>*</em>--><?php //echo $this->__('Email Address') ?><!--</label>-->
+<!--                    <div class="input-box">-->
+<!--                        <input type="text" name="email" id="email_address" value="" title="--><?php //echo $this->__('Email Address') ?><!--" class="input-text validate-email required-entry" />-->
+<!--                    </div>-->
+<!--                </li>-->
+                <?php
+                $customer = Mage::getSingleton('customer/session')->getCustomer();
+                $name = $customer->getName();
+                ?>
+                <li class="fields">
+                    <label for="email_address" class="required"><?php echo $this->__('Order will be placed in the name of')." $name"; ?></label>
+                </li>
+                <li class="fields">
+                    <label for="email_address" class="required"><em>*</em><?php echo $this->__('Store Pick Address') ?></label>
+                    <div class="input-box">
+                        <select name="store" id="store" title="<?php echo $this->__('Store Pick Address') ?>" class="input-text required-entry" >
+                            <option selected="true" value=" ">Select</option>
+                            <option  value="Kochin Store">Kochin Store</option>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="buttons-set">
+                <p class="required"><?php echo $this->__('Note:  The Order must be picked withen 7 days, else will be canceled.') ?></p>
+                <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                <button style="float: left;width: 10%;" type="submit" title="<?php echo $this->__('Place Order') ?>" class="button"><span><span><?php echo $this->__('Place Order') ?></span></span></button>
+            </div>
+        </div>
+    </form>
+    <?php
+//    $cart = Mage::getModel('checkout/cart')->getQuote()->getItemsCollection();
+//    echo "<pre>";
+//    print_r($cart->getData());
+    ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        var dataForm = new VarienForm('form-validate-clickout', true);
+        //]]>
+    </script>
+</div>
+<style>
+li {list-style-type: none;}
+</style>

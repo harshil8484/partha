@@ -1,0 +1,231 @@
+<?php
+$isPartner = Mage::getModel('marketplace/userprofile')->isPartner();
+if ($isPartner == 1) {
+
+    $arrribut_ids = array(143);
+    foreach ($arrribut_ids as $arrribut_id) {
+        $attribute = Mage::getModel('catalog/resource_eav_attribute')->load($arrribut_id);
+        ?>
+        <li id="id-<?php echo $attribute->getStoreLabel(); ?>">
+            <label id="<?php echo $attribute['attribute_code'] ?>" class="<?php if ($attribute['is_required']) {
+                echo "required";
+            } ?>"><?php echo $attribute->getStoreLabel(); ?><?php if ($attribute['frontend_input'] == 'price') { ?>
+                    <b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+                    echo " (" . Mage::app()->getLocale()->currency($currency_code)->getSymbol() . ")"; ?></b><?php } ?>:</label>
+
+            <div class="input-box">
+                <?php if ($attribute['frontend_input'] == 'select' || $attribute['frontend_input'] == 'multiselect' || $attribute['frontend_input'] == 'boolean') {
+                    $fix = "";
+                    $multiselect = "";
+                    if ($attribute['frontend_input'] == 'multiselect') {
+                        $fix = "[]";
+                        $multiselect = "multiple";
+                    } ?>
+                    <select class="<?php if ($attribute['is_required']) {
+                        echo 'required-entry';
+                    } ?> input-text"
+                            name="<?php echo $attribute['attribute_code'] . $fix; ?>" <?php echo $multiselect; ?>>
+
+                        <?php $attributeOptions = $attribute->setStoreId(Mage::app()->getStore()->getId())->getSource()->getAllOptions();
+                        ?>
+                        <option selected>Select <?php echo $attribute->getStoreLabel(); ?></option>
+                        <?php
+                        foreach ($attributeOptions as $each) {
+                            ?>
+                            <option value="<?php echo $each["value"]; ?>"><?php echo $each["label"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                <?php } ?>
+                <div>
+        </li>
+    <?php
+    }
+    ?>
+    <p style="color: black;text-align: center">---------------- COLOR OPTIONS ---------------------</p>
+    <?php
+    $arrribut_ids = array(303, 304, 196, 197, 201, 202);
+    foreach ($arrribut_ids as $arrribut_id) {
+        $attribute = Mage::getModel('catalog/resource_eav_attribute')->load($arrribut_id);
+        ?>
+
+        <li id="id-<?php echo $attribute->getStoreLabel(); ?>">
+            <label id="<?php echo $attribute['attribute_code'] ?>" class="<?php if ($attribute['is_required']) {
+                echo "required";
+            } ?>"><?php echo $attribute->getStoreLabel(); ?><?php if ($attribute['frontend_input'] == 'price') { ?>
+                    <b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+                    echo " (" . Mage::app()->getLocale()->currency($currency_code)->getSymbol() . ")"; ?></b><?php } ?>:</label>
+
+            <div class="input-box">
+                <?php if ($attribute['frontend_input'] == 'select' || $attribute['frontend_input'] == 'multiselect' || $attribute['frontend_input'] == 'boolean') {
+                    $fix = "";
+                    $multiselect = "";
+                    if ($attribute['frontend_input'] == 'multiselect') {
+                        $fix = "[]";
+                        $multiselect = "multiple";
+                    } ?>
+                    <select class="<?php if ($attribute['is_required']) {
+                        echo 'required-entry';
+                    } ?> input-text"
+                            name="<?php echo $attribute['attribute_code'] . $fix; ?>" <?php echo $multiselect; ?>>
+
+                        <?php $attributeOptions = $attribute->setStoreId(Mage::app()->getStore()->getId())->getSource()->getAllOptions();
+                        ?>
+                        <option selected>Select <?php echo $attribute->getStoreLabel(); ?></option>
+                        <?php
+                        foreach ($attributeOptions as $each) {
+                            ?>
+                            <option value="<?php echo $each["value"]; ?>"><?php echo $each["label"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                <?php } ?>
+                <div>
+        </li>
+    <?php
+    }
+    ?>
+    <p style="color: black;text-align: center">----------------- FINER DETAILS ---------------------</p>
+    <?php
+    $arrribut_ids = array(149, 150, 151, 148, 157, 183, 285, 155, 190, 305, 313, 147);
+    foreach ($arrribut_ids as $arrribut_id) {
+        $attribute = Mage::getModel('catalog/resource_eav_attribute')->load($arrribut_id);
+        ?>
+
+        <li id="id-<?php echo $attribute->getStoreLabel(); ?>">
+            <label id="<?php echo $attribute['attribute_code'] ?>" class="<?php if ($attribute['is_required']) {
+                echo "required";
+            } ?>"><?php echo $attribute->getStoreLabel(); ?><?php if ($attribute['frontend_input'] == 'price') { ?>
+                    <b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+                    echo " (" . Mage::app()->getLocale()->currency($currency_code)->getSymbol() . ")"; ?></b><?php } ?>:</label>
+
+            <div class="input-box">
+                <?php if ($attribute['frontend_input'] == 'select' || $attribute['frontend_input'] == 'multiselect' || $attribute['frontend_input'] == 'boolean') {
+                    $fix = "";
+                    $multiselect = "";
+                    if ($attribute['frontend_input'] == 'multiselect') {
+                        $fix = "[]";
+                        $multiselect = "multiple";
+                    } ?>
+                    <select class="<?php if ($attribute['is_required']) {
+                        echo 'required-entry';
+                    } ?> input-text"
+                            name="<?php echo $attribute['attribute_code'] . $fix; ?>" <?php echo $multiselect; ?>>
+
+                        <?php $attributeOptions = $attribute->setStoreId(Mage::app()->getStore()->getId())->getSource()->getAllOptions();
+                        ?>
+                        <option selected>Select <?php echo $attribute->getStoreLabel(); ?></option>
+                        <?php
+                        foreach ($attributeOptions as $each) {
+                            ?>
+                            <option value="<?php echo $each["value"]; ?>"><?php echo $each["label"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                <?php } ?>
+                <div>
+        </li>
+    <?php
+    }
+    ?>
+    <p style="color: black;text-align: center">---------------- -SIZING DETAILS ---------------------</p>
+    <?php
+    $arrribut_ids = array(152, 306, 158, 307, 308, 181, 191, 227, 309, 310, 146, 192, 198, 211, 187, 312, 188);
+    foreach ($arrribut_ids as $arrribut_id) {
+        $attribute = Mage::getModel('catalog/resource_eav_attribute')->load($arrribut_id);
+        ?>
+        <li id="id-<?php echo $attribute->getStoreLabel(); ?>">
+            <label id="<?php echo $attribute['attribute_code'] ?>" class="<?php if ($attribute['is_required']) {
+                echo "required";
+            } ?>"><?php echo $attribute->getStoreLabel(); ?><?php if ($attribute['frontend_input'] == 'price') { ?>
+                    <b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+                    echo " (" . Mage::app()->getLocale()->currency($currency_code)->getSymbol() . ")"; ?></b><?php } ?>:</label>
+
+            <div class="input-box">
+                <?php if ($attribute['frontend_input'] == 'select' || $attribute['frontend_input'] == 'multiselect' || $attribute['frontend_input'] == 'boolean') {
+                    $fix = "";
+                    $multiselect = "";
+                    if ($attribute['frontend_input'] == 'multiselect') {
+                        $fix = "[]";
+                        $multiselect = "multiple";
+                    } ?>
+                    <select class="<?php if ($attribute['is_required']) {
+                        echo 'required-entry';
+                    } ?> input-text"
+                            name="<?php echo $attribute['attribute_code'] . $fix; ?>" <?php echo $multiselect; ?>>
+
+                        <?php $attributeOptions = $attribute->setStoreId(Mage::app()->getStore()->getId())->getSource()->getAllOptions();
+                        ?>
+                        <option selected>Select <?php echo $attribute->getStoreLabel(); ?></option>
+                        <?php
+                        foreach ($attributeOptions as $each) {
+                            ?>
+                            <option value="<?php echo $each["value"]; ?>"><?php echo $each["label"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                <?php } ?>
+                <?php if ($attribute['frontend_input'] == 'text' || $attribute['frontend_input'] == 'textarea') {
+                    ?>
+                    <input class="<?php if ($attribute['is_required']) {
+                        echo 'required-entry';
+                        echo " " . $attribute['frontend_class'];
+                    } ?> input-text " type="text" name="<?php echo $attribute['attribute_code']; ?>"
+                           value="<?php echo $attribute['default_value']; ?>"/>
+                <?php } ?>
+                <div>
+        </li>
+    <?php
+    }
+    ?>
+    <p style="color: black;text-align: center">---------------- TYPE ---------------------</p>
+    <?php
+    $arrribut_ids = array(153, 160, 233, 184, 185, 186, 291, 193, 199, 203, 210);
+    foreach ($arrribut_ids as $arrribut_id) {
+        $attribute = Mage::getModel('catalog/resource_eav_attribute')->load($arrribut_id);
+        ?>
+        <li id="id-<?php echo $attribute->getStoreLabel(); ?>">
+            <label id="<?php echo $attribute['attribute_code'] ?>" class="<?php if ($attribute['is_required']) {
+                echo "required";
+            } ?>"><?php echo $attribute->getStoreLabel(); ?><?php if ($attribute['frontend_input'] == 'price') { ?>
+                    <b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+                    echo " (" . Mage::app()->getLocale()->currency($currency_code)->getSymbol() . ")"; ?></b><?php } ?>:</label>
+
+            <div class="input-box">
+                <?php if ($attribute['frontend_input'] == 'select' || $attribute['frontend_input'] == 'multiselect' || $attribute['frontend_input'] == 'boolean') {
+                    $fix = "";
+                    $multiselect = "";
+                    if ($attribute['frontend_input'] == 'multiselect') {
+                        $fix = "[]";
+                        $multiselect = "multiple";
+                    } ?>
+                    <select class="<?php if ($attribute['is_required']) {
+                        echo 'required-entry';
+                    } ?> input-text"
+                            name="<?php echo $attribute['attribute_code'] . $fix; ?>" <?php echo $multiselect; ?>>
+
+                        <?php $attributeOptions = $attribute->setStoreId(Mage::app()->getStore()->getId())->getSource()->getAllOptions();
+                        ?>
+                        <option selected>Select <?php echo $attribute->getStoreLabel(); ?></option>
+                        <?php
+                        foreach ($attributeOptions as $each) {
+                            ?>
+                            <option value="<?php echo $each["value"]; ?>"><?php echo $each["label"]; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                <?php } ?>
+                <?php if ($attribute['frontend_input'] == 'text' || $attribute['frontend_input'] == 'textarea') {
+                    ?>
+                    <input class="<?php if ($attribute['is_required']) {
+                        echo 'required-entry';
+                        echo " " . $attribute['frontend_class'];
+                    } ?> input-text " type="text" name="<?php echo $attribute['attribute_code']; ?>"
+                           value="<?php echo $attribute['default_value']; ?>"/>
+                <?php } ?>
+
+                <div>
+        </li>
+    <?php
+    }
+}?>

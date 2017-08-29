@@ -1,0 +1,68 @@
+<?php
+$temp=explode('/profile/',Mage::helper('core/url')->getCurrentUrl());
+if($temp[1]!=''){
+	$partner=$this->getProfileDetail();
+?>	
+<style>.main{background-image:none;background-color:<?php echo $partner->getbackgroundth();?>;}</style>
+<?php
+	$bannerpic=$partner->getbannerpic()!=''?$partner->getbannerpic():"banner-image.png";
+	$bannerpic=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'avatar/'.$bannerpic;
+?>
+	<div class="collection-banner"><img src="<?php echo $bannerpic; ?>" alt="no image"></img></div>
+
+<h1 class="profile_page_heading">
+	<?php 	if($partner->getshoptitle()!='')
+			echo $partner->getshoptitle();
+		else
+			echo $partner->getprofileurl(); ?>
+</h1>
+<?php } else { 
+	echo Mage::helper('marketplace')->__('Invalid profile'); } 
+?>
+<div class="wk-profile">	
+	<div class="wk_mp_detail">		
+		<span class="row">			
+			<span class="label"><?php echo Mage::Helper('marketplace')->__('About');?></span>
+			<span class="data"><?php echo $partner->getcompdesi();?></span>		
+		</span>		
+	<!--<span class="row">			
+			<span class="label"><?php echo Mage::Helper('marketplace')->__('Facebook');?></span>		
+			<span class="data">
+				<a href="<?php echo "http://www.facebook.com/".$partner->getfacebookid() ?>"><?php echo "http://www.facebook.com/".$partner->getfacebookid();?></a>
+			</span>		
+		</span>		
+		<span class="row">			
+			<!--<span class="label"><?php echo Mage::Helper('marketplace')->__('Twitter');?></span>		
+			<span class="data">
+				<a href="<?php echo "http://twitter.com/".$partner->gettwitterid() ?>"><?php echo "http://twitter.com/".$partner->gettwitterid();?></a>
+			</span>		
+		</span>	
+		-->
+	</div>	
+				
+		<?php 	
+			$partnerproducts = Mage::getModel('marketplace/product')
+										->getCollection()					
+										->addFieldToFilter('userid', array('eq' =>$partner->getmageuserid()))					
+										->addFieldToFilter('status', array('neq' => 2))					
+										->setOrder('mageproductid');	
+if(count($partnerproducts)>0){	 ?>	
+	<div class="shop">		
+<?php								
+			foreach($partnerproducts as $product){ 		
+				$product=Mage::getModel('catalog/product')->load($product->getMageproductid());
+				$stockItem = Mage::getModel('cataloginventory/stock_item');
+				$stockItem->loadByProduct($product->getId());
+				if($stockItem->getData('is_in_stock') == 1 && $product->getStatus() == 1){?>
+					<a href="<?php echo $product->getProductUrl();?>"><img src="<?php echo $product->getImageUrl();?>" title="<?php echo $product->getName(); ?>" alt="<?php echo $product->getName(); ?>"></img></a>
+		<?php 	}
+			} ?>	
+			<div class="label">			
+			<?php echo Mage::Helper('marketplace')->__('Shop')?>			
+			<a href="<?php echo $this->getUrl('marketplace/seller/collection').$partner->getprofileurl();?>"><?php echo Mage::Helper('marketplace')->__('See more..')?></a>		
+		</div>
+	</div>	
+	<?php  } ?>
+
+	<div class="wk_clear"></div>
+</div>

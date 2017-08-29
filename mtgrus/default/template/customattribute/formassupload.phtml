@@ -1,0 +1,14 @@
+<?php
+	$attributeSetId = $this->getRequest()->getParam('set')!=''? $this->getRequest()->getParam('set'):4; 
+	$readresult=Mage::getModel('customattribute/customattribute')->getFrontShowAttributes($attributeSetId);
+	$columnname="";
+	foreach($readresult as $attr) {
+		$attribute = Mage::getModel('catalog/resource_eav_attribute')->load($attr['attribute_id']);
+		$columnname=$columnname.$attribute->getAttributeCode().",";
+	}
+?>
+<li class="massuploadnotice">
+	<span><b><?php echo Mage::Helper('customattribute')->__('CSV Column Name for Custom Attribute');?></b></span>
+	<div><?php echo $columnname; ?></div>
+</li>
+<?php  ?>

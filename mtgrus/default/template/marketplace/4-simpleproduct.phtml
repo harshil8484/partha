@@ -1,0 +1,261 @@
+<?php 
+	$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+	$customerid=Mage::getSingleton('customer/session')->getCustomerId();
+	if($isPartner==1){?>
+<script type="text/javascript">
+if (typeof jQuery == 'undefined'){
+    document.write(unescape("%3Cscript src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+}
+</script> 
+<script type="text/javascript">
+  bkLib.onDomLoaded(function() {
+        new nicEditor({fullPanel : true}).panelInstance('description');
+        new nicEditor({fullPanel : true}).panelInstance('short_description');
+  });
+</script>
+<?php
+	$collection = Mage::getModel('sales/order')->getCollection();
+	$categories = Mage::getModel('catalog/category')->getCollection()->addAttributeToSelect('*')->addIsActiveFilter();
+	$allcatid = array();
+	$k=0;
+	foreach ($categories as $c) {
+	   $allcatid[$k] = $c->getId();
+	   $k++;
+	}
+	$finalcat=array_shift($allcatid);
+	$partner=Mage::getModel('marketplace/userprofile')->getPartnerProfileById($customerid); ?>
+	<?php $_helper = Mage::helper('catalog/category') ?>
+<?php $_categories = $_helper->getStoreCategories() ?>
+<?php $currentCategory = Mage::registry('current_category') ?>
+<?php if (count($_categories) > 0): ?>
+    <ul>
+        <?php foreach($_categories as $_category): ?>
+            <li>
+                <a href="<?php echo $_helper->getCategoryUrl($_category) ?>">
+                    <?php echo $_category->getName() ?>
+                </a>
+                <?php $_category = Mage::getModel('catalog/category')->load($_category->getId()) ?>
+                <?php $_subcategories = $_category->getChildrenCategories() ?>
+                <?php if (count($_subcategories) > 0): ?>
+                    <ul>
+                        <?php foreach($_subcategories as $_subcategory): ?>
+                            <li>
+                                <a href="<?php echo $_helper->getCategoryUrl($_subcategory) ?>">
+                                   - <?php echo $_subcategory->getName() ?>
+                                </a>
+								<?php $_subcategories2 = $_subcategory->getChildrenCategories() ?>
+                    <?php if (count($_subcategories2) > 0): ?>
+                        <ul>
+                            <?php foreach($_subcategories2 as $_subcategory2): ?>
+                                <li>
+                                    <a href="<?php echo $_helper->getCategoryUrl($_subcategory2) ?>">
+                                        --<?php echo $_subcategory2->getName() ?>
+                                    </a>
+									<?php $_subcategories3 = $_subcategory2->getChildrenCategories() ?>
+                    <?php if (count($_subcategories3) > 0): ?>
+                        <ul>
+                            <?php foreach($_subcategories3 as $_subcategory3): ?>
+                                <li>
+                                    <a href="<?php echo $_helper->getCategoryUrl($_subcategory3) ?>">
+                                        ---<?php echo $_subcategory3->getName() ?>
+                                    </a>
+									<?php $_subcategories4 = $_subcategory3->getChildrenCategories() ?>
+                    <?php if (count($_subcategories4) > 0): ?>
+                        <ul>
+                            <?php foreach($_subcategories4 as $_subcategory4): ?>
+                                <li>
+                                    <a href="<?php echo $_helper->getCategoryUrl($_subcategory4) ?>">
+                                       ---- <?php echo $_subcategory4->getName() ?>
+                                    </a>
+									<?php $_subcategories5 = $_subcategory4->getChildrenCategories() ?>
+                    <?php if (count($_subcategories5) > 0): ?>
+                        <ul>
+                            <?php foreach($_subcategories5 as $_subcategory5): ?>
+                                <li>
+                                    <a href="<?php echo $_helper->getCategoryUrl($_subcategory5) ?>">
+                                        <?php echo $_subcategory5->getName() ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+	<div class="page-title">
+		<h1><?php echo Mage::helper('marketplace')->__('Add New Simple Product') ?></h1>
+	</div>
+	<form action="<?php echo $this->getUrl('marketplace/marketplaceaccount/simpleproduct') ?>" enctype="multipart/form-data" method="post" id="form-customer-product-new">
+		<div class="fieldset">
+			<input type="hidden" class="len" name="type_id" id="producttype" value="simple" title="producttype" class="" />
+			<input type="hidden" class="len" name="status" id="status" value="2" title="status" class="" />
+			<input type="hidden" class="len" name="userid" id="userid" value="<?php echo Mage::getSingleton('customer/session')->getCustomer()->getId();?>" title="id" class="" />
+			<input type="hidden"  name="wstoreids" id="wstoreids" value="<?php echo Mage::app()->getStore()->getStoreId(); ?>" title="wstoreids" class="" />
+			<input type="hidden" class="len" name="attribute_set_id" id="attribute_set_id" value="<?php if(Mage::getStoreConfig('marketplace/marketplace_options/attributesetid')!='') { echo Mage::getStoreConfig('marketplace/marketplace_options/attributesetid'); } else { echo 4; } ?>" title="AttributeSetId" class="" />
+				<h4 class="legend"><?php echo Mage::helper('marketplace')->__('Simple Product') ?></h4>
+					<ul class="form-list" id="wk_bodymain">
+						<input type="hidden"  name="producttypecustom" id="producttypecustom" value="customproductsimple" title="producttypecustom" class="" />
+					<?php if(($partner['twitterid']=='')||($partner['facebookid']=='')||($partner['bannerpic']=='')||($partner['logopic']=='')||($partner['complocality']=='')||($partner['countrypic']=='')||($partner['compdesi']=='')){?>
+						<marquee><h4 class="wk_marquee"><?php echo Mage::helper('marketplace')->__('Please Complete your Profile..')?></h4></marquee>
+					<?php } ?>
+					
+						<li>
+							<label class="required"><em>*</em><?php echo Mage::helper('marketplace')->__('Product Category') ?>:</label>
+							<div class="input-box">
+								<select id="category" class="required-entry" name="category2[]" multiple="yes" >
+									<?php foreach($allcatid as $keycat){?>
+											<option value="<?php echo $keycat;?>">
+											<?php echo Mage::getModel("catalog/category")->load($keycat)->getName(); ?></option>
+									
+									<?php } ?>								
+								</select>
+							</div>
+						</li>
+						<li>
+							<label class="required"><em>*</em><?php echo Mage::helper('marketplace')->__('Product Name') ?>:</label>
+							<div class="input-box">
+								<input type="name" class="required-entry input-text" name="name" id="name" />
+							</div>
+						</li>
+						<li>
+							<label><?php echo Mage::helper('marketplace')->__('Description') ?>:</label>
+							<div class="input-box">
+								<textarea name="description" class="input-text" id="description" rows="5" cols="75" ></textarea>
+							</div>
+						</li>
+						<li>
+							<label><?php echo Mage::helper('marketplace')->__('Short Description') ?>:</label>
+							<div class="input-box">
+								<textarea name="short_description" id="short_description" rows="5" cols="75" class="input-text"></textarea>
+							</div>
+						</li>
+						<li>
+							<label class="required"><em>*</em><?php echo Mage::helper('marketplace')->__('SKU') ?>:</label>
+							<div class="input-box">
+								<input name="sku" id="sku" class="required-entry input-text" />
+							</div>
+							<div id="skuavail" >
+								<span class="success-msg skuavailable"><?php echo Mage::helper('marketplace')->__('SKU Available') ?></span>
+							</div>
+							<div id="skunotavail" >
+								<span class="error-msg skunotavailable"><?php echo Mage::helper('marketplace')->__('SKU Already Exist') ?></span>
+							</div>
+						</li>
+						<li>
+							<label class="required"><em>*</em><?php echo Mage::helper('marketplace')->__('Price') ?>:</label>
+							<div class="input-box">
+								<input type="price" class="required-entry validate-zero-or-greater input-text" name="price" id="price"/>
+							</div>
+						</li>
+						<li>
+							<label class="required"><em>*</em><?php echo Mage::helper('marketplace')->__('Stock') ?>:</label>
+							<div class="input-box">
+								<input type="stock" class="required-entry validate-number input-text" name="stock" id="stock"/>
+							</div>
+						</li>
+						<li>
+							<label class="required"><em>*</em><?php echo Mage::helper('marketplace')->__('Weight') ?>:</label>
+							<div class="input-box">
+								<input type="weight" class="required-entry validate-number validate-zero-or-greater validate-number-range number-range-0-99999999.9999 input-text" name="weight" id="weight"/>
+							</div>
+						</li>
+						<li>
+							<label><?php echo Mage::helper('marketplace')->__('Sample Image') ?>:</label>
+							<div class="input-box">
+								<input type="file" name="dumimg" class="dumimg" size="33" >
+								<a href="#" onClick="showOtherImage(); return false;"><?php echo Mage::helper('marketplace')->__('Add other image') ?></a>
+								<br />
+								<div id="otherimages"></div>
+							</div>
+						</li>
+						<?php echo $this->getChildHtml();?>
+					</ul>
+		</div>
+		<div class="buttons-set">
+			<p class="required">* <?php echo Mage::helper('marketplace')->__('Required Fields') ?></p>
+			<button class="button" title="Save" type="submit" id="save_butn" style="float:none;">
+				<span><span><?php echo Mage::helper('marketplace')->__('Save') ?></span></span>
+			</button>
+			<button type="reset" class="button"><span><span><?php echo Mage::helper('marketplace')->__('Cancel') ?></span></span></button>
+			<p class="back-link">
+				<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo Mage::helper('marketplace')->__('Back') ?></a>
+			</p>
+		</div>
+	</form>
+<script> 
+jQuery.noConflict();
+var newCustomerProductForm = new VarienForm('form-customer-product-new', true);
+jQuery('#save_butn').click(function(e){
+		if(newCustomerProductForm.validator.validate()!=false){
+			jQuery('#save_butn span span').text('Saving..');
+			jQuery('#save_butn').css('opacity','0.7');
+		}
+});
+	jQuery('input#sku').change(function(){
+		var len=jQuery('input#sku').val();
+		var len2=len.length;
+		if(len2==0){
+			alert("SKU can't be left empty");
+			jQuery('div#skuavail').css('display','none');
+			jQuery('div#skunotavail').css('display','none');
+		}
+		else{
+			jQuery.ajax({
+				url: "<?php echo Mage::getUrl('marketplace/marketplaceaccount/verifysku');?>",
+				type: "POST",
+				data: {sku:jQuery('input#sku').val()},
+				dataType: 'html',
+				success:function($data){
+					$data=JSON.parse($data);
+					if($data.avl==1){
+						jQuery('div#skuavail').css('display','block');
+						jQuery('div#skunotavail').css('display','none');
+					}
+					else{
+						jQuery('div#skunotavail').css('display','block');
+						jQuery('div#skuavail').css('display','none');
+						jQuery("input#sku").attr('value','');
+					}
+				}
+			});
+		}
+	});
+</script>	
+<script type="text/javascript">
+	var i=2;
+	function showOtherImage(){
+		var newdiv = document.createElement('div');
+		newdiv.setAttribute("id","childDiv"+i);
+		newdiv.innerHTML = "<input type='file' name='images"+i+"' /><a href=\"javascript:;\" onclick=\"removeEvent('childDiv"+i+"')\"><?php echo Mage::helper('marketplace')->__('Remove') ?></a>";
+		var ni = document.getElementById('otherimages');
+		ni.appendChild(newdiv);
+		i++;
+	}
+	function removeEvent(divNum){
+		var d = document.getElementById('otherimages');
+		var olddiv = document.getElementById(divNum);
+		d.removeChild(olddiv);
+		i--;
+	}
+</script>
+<?php }else{
+	echo "<h2 class='wk_new_msg'>".Mage::helper('marketplace')->__("FOR BECOME SELLER CONTACT TO ADMIN")."..</h2>";
+}?>
+

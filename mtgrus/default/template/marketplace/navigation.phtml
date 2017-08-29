@@ -1,0 +1,74 @@
+<?php $partner = Mage::getModel('marketplace/userprofile')->isPartner(Mage::getSingleton('customer/session')->getCustomerId()); 
+$magentoCurrentUrl = Mage::helper('core/url')->getCurrentUrl(); ?>
+	<div class="block block-account">
+		<div class="block-title">
+			<strong>
+			<span><?php echo Mage::helper('marketplace')->__('Market Place') ?></span>
+			</strong>
+		</div>
+		<div class="block-content">
+			<ul class="wk_cont_ul">
+				<?php if($partner){ ?>
+					<li  <?php echo strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/editprofile')? "class=current":"";?>>
+						<?php if(strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/editprofile')){ ?>
+							<strong><?php echo Mage::helper('marketplace')->__('Seller Profile') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/editprofile'); ?>"><?php echo Mage::helper('marketplace')->__('Seller Profile') ?></a>
+						<?php } ?>
+					</li>
+                    <li  <?php echo strpos($magentoCurrentUrl,'configproduct')? "class=current":"";?>>
+                        <?php if(strpos($magentoCurrentUrl,'configproduct')){ ?>
+                            <strong><?php echo Mage::helper('marketplace')->__('New Config Products') ?></strong>
+                        <?php }
+                        else{ ?>
+                            <a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/configproduct'); ?>"><?php echo Mage::helper('marketplace')->__('New Config Products') ?></a>
+                        <?php } ?>
+                    </li>
+					<li  <?php echo strpos($magentoCurrentUrl,'simpleproduct')? "class=current":"";?>>
+						<?php if(strpos($magentoCurrentUrl,'simpleproduct')){ ?>
+							<strong><?php echo Mage::helper('marketplace')->__('New Simple Products') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/simpleproduct'); ?>"><?php echo Mage::helper('marketplace')->__('New Simple Products') ?></a>
+						<?php } ?>
+					</li>
+					<li  <?php echo strpos($magentoCurrentUrl,'myproductslist')? "class=current":"";?>>
+						<?php if(strpos($magentoCurrentUrl,'myproductslist')){ ?>
+							<strong><?php echo Mage::helper('marketplace')->__('My Products List') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/myproductslist'); ?>"><?php echo Mage::helper('marketplace')->__('My Products List') ?></a>
+						<?php } ?>					
+					</li>
+					<li  <?php echo strpos($magentoCurrentUrl,'mydashboard')? "class=current":"";?>>
+						<?php if(strpos($magentoCurrentUrl,'mydashboard')){ ?>
+							<strong><?php echo Mage::helper('marketplace')->__('My Dashboard') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/mydashboard'); ?>"><?php echo Mage::helper('marketplace')->__('My Dashboard') ?></a>
+						<?php } ?>	
+					</li>
+					<?php echo $this->getChildHtml();?>
+					<li class="last <?php echo strpos($magentoCurrentUrl,'myorderhistory')? "current":"";?>">
+						<?php if(strpos($magentoCurrentUrl,'myorderhistory')){ ?>
+							<strong><?php echo Mage::helper('marketplace')->__('My Order History') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/myorderhistory'); ?>"><?php echo Mage::helper('marketplace')->__('My Order History') ?></a>
+						<?php } ?>	
+					</li>
+				<?php }
+				else{ ?>
+					<li class="last <?php echo strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/becomepartner')? "current":"";?>">
+						<?php if(strpos($magentoCurrentUrl,'marketplace/marketplaceaccount/becomepartner')){ ?>
+							<strong><?php echo Mage::helper('marketplace')->__('Become Partner') ?></strong>
+						<?php }
+						else{ ?>
+							<a href="<?php echo $this->getUrl('marketplace/marketplaceaccount/becomepartner'); ?>"><?php echo Mage::helper('marketplace')->__('Become Partner') ?></a>
+						<?php } ?>	
+					</li>
+				<?php } ?>
+			</ul>
+		</div>
+	</div>

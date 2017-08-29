@@ -1,0 +1,347 @@
+<?php
+echo "nikhukl";
+$isbundle=$this->getRequest()->getParam('type');
+?>
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined'){
+        document.write(unescape("%3Cscript src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+    }
+</script>
+<!-- <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> -->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="//cloud.github.com/downloads/wycats/handlebars.js/handlebars-1.0.0.beta.6.js" type="text/javascript" charset="utf-8"></script>
+<?php
+$isPartner= Mage::getModel('marketplace/userprofile')->isPartner();
+if($isPartner==1){
+    ?>
+    <?php
+    $taxtype="";$t=0;
+    //$attributeSetId = Mage::getSingleton('core/session')->getAttributeSet();
+    if(Mage::getStoreConfig('marketplace/marketplace_options/attributesetid')!='') {
+        $attributeSetId= Mage::getStoreConfig('marketplace/marketplace_options/attributesetid');
+    }
+    else
+    {
+        $attributeSetId=4;
+    }
+    $readresult=Mage::getModel('customattribute/customattribute')->getFrontShowAttributes($attributeSetId);
+    foreach($readresult as $attr) {
+        $attribute = Mage::getModel('catalog/resource_eav_attribute')->load($attr['attribute_id']); ?>
+
+        <?php
+        //echo "tt<pre>";print_r($attribute->getData());
+        $apply_to=explode(',', $attribute->getData('apply_to'));
+        if(in_array($isbundle, $apply_to) || $attribute->getData('apply_to')==''){
+
+            ?>
+            <?php  if($attribute['is_user_defined']  == 1){ ?>
+                <li id="id-<?php echo $attribute->getStoreLabel();?>">
+                    <label  id="<?php echo $attribute['attribute_code']?>" class="<?php if($attribute['is_required']){ echo "required";} ?>"><?php echo $attribute->getStoreLabel(); ?><?php if($attribute['frontend_input'] == 'price'){ ?><b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+                            echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b><?php }?>:</label>
+                    <div class="input-box">
+                        <?php if($attribute['frontend_input'] == 'select' ||$attribute['frontend_input']=='multiselect' || $attribute['frontend_input']=='boolean'){
+                            $fix="";
+                            $multiselect="";
+                            if($attribute['frontend_input']=='multiselect'){
+                                $fix="[]";
+                                $multiselect="multiple";
+                            } ?>
+                            <select class="<?php if($attribute['is_required']) {echo 'required-entry'; } ?> input-text" name="<?php echo $attribute['attribute_code'].$fix;?>" <?php echo $multiselect;?>>
+
+                                <?php $attributeOptions = $attribute->setStoreId(Mage::app()->getStore()->getId())->getSource()->getAllOptions();
+                                foreach($attributeOptions as $each){  ?>
+                                    <option value="<?php echo $each["value"]; ?>"><?php echo $each["label"]; ?>
+                                    </option>
+
+                                <?php } ?>
+                            </select>
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'text'){
+                            ?>
+                            <input class="<?php if($attribute['is_required']) {echo 'required-entry';echo " ".$attribute['frontend_class']; } ?> input-text " type="text" name="<?php echo $attribute['attribute_code'];?>" value="<?php echo $attribute['default_value']; ?>" />
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'price'){ ?>
+                            <input class="<?php if($attribute['is_required']) {echo 'required-entry';echo " ".$attribute['frontend_class']; } ?> input-text" type="number" name="<?php echo $attribute['attribute_code'];?>" value="<?php echo $attribute['default_value']; ?>"/>
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'weight'){ ?>
+                            <input class="<?php if($attribute['is_required']) {echo 'required-entry'; echo " ".$attribute['frontend_class'];} ?> input-text" type="text" name="<?php echo $attribute['attribute_code'];?>"/>
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'date'){
+                            ?>
+                            <input  class="<?php if($attribute['is_required']) {echo 'required-entry'; echo " ".$attribute['frontend_class'];} ?> input-text datetype" type="text" name="<?php echo $attribute['attribute_code'];?>" value="<?php echo date("Y/m/d", Mage::getModel('core/date')->timestamp(time())); ?>"/>
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'textarea'){ ?>
+                            <textarea class="<?php if($attribute['is_required']) {echo 'required-entry'; echo " ".$attribute['frontend_class'];} ?> input-text" rows="5" cols="75" id="textar" name="<?php echo $attribute['attribute_code'];?>" /><?php echo $attribute['default_value']; ?></textarea>
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'media_image'){ ?>
+                            <input class="<?php if($attribute['is_required']) {echo 'required-entry'; echo " ".$attribute['frontend_class'];} ?> input-text" type="file" name="<?php echo $attribute['attribute_code'];?>"/>
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'gallery'){ ?>
+                            <input class="<?php if($attribute['is_required']) {echo 'required-entry';echo " ".$attribute['frontend_class']; } ?> input-text" type="file" name="<?php echo $attribute['attribute_code'];?>"/>
+                        <?php } ?>
+                        <?php if($attribute['frontend_input'] == 'weee'){
+                            $taxtype=$attribute['attribute_code'];
+                            ?>
+                            <div class="producttax">
+                                <div class="wk_mp_option-box">
+                                    <ul class="wk_mp_headcus ul_first">
+                                        <li><?php echo Mage::helper('customattribute')->__('Country/State') ?></li>
+                                        <li><?php echo Mage::helper('customattribute')->__('tax') ?></li>
+                                        <li><?php echo Mage::helper('customattribute')->__('Action') ?></li>
+                                        <li>
+                                            <button class="button addproducttax" title="Add" type="button">
+												<span>
+													<span><?php echo Mage::helper('customattribute')->__('Add') ?></span>
+												</span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        <?php  } ?>
+
+                    </div>
+                </li>
+            <?php }
+            elseif($attribute['is_user_defined']  == 0) {
+                if($attribute['attribute_code']=='special_price'){ ?>
+                    <li>
+                        <label><?php echo $attribute->getStoreLabel(); ?><b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b>:</label>
+                        <div class="input-box">
+                            <input type="special_price" class="<?php if($attribute['is_required']) {echo 'required-entry'; } ?> input-text" name="special_price" id="special_price"/>
+                        </div>
+                    </li>
+                    <li>
+                        <label><?php echo Mage::helper('customattribute')->__('Special Price From') ?>:</label>
+                        <div class="input-box">
+                            <input name="special_from_date" id="special_from_date" class="<?php if($attribute['is_required']) {echo 'required-entry'; } ?> input-text"/>
+                        </div>
+                    </li>
+                    <li>
+                        <label><?php echo Mage::helper('customattribute')->__('Special Price To') ?>:</label>
+                        <div class="input-box">
+                            <input name="special_to_date" id="special_to_date" class="<?php if($attribute['is_required']) {echo 'required-entry'; } ?> input-text"/>
+                        </div>
+                    </li>
+                <?php }
+                elseif($attribute['attribute_code']=='tier_price'){ ?>
+                    <li class="tierprice">
+                        <label><?php echo $attribute->getStoreLabel(); ?>:</label>
+                        <div class="wk_mp_option-box">
+                            <ul class="wk_mp_headcus ul_first">
+                                <li><?php echo Mage::helper('customattribute')->__('Special Price To') ?></li>
+                                <li><?php echo Mage::helper('customattribute')->__('Qty') ?></li>
+                                <?php
+                                if($isbundle=='bundle'){ ?>
+                                    <li class="bundle"><?php echo Mage::helper('customattribute')->__('Percent Discount') ?><b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b></li>
+                                <?php	}else{ ?>
+                                    <li><?php echo Mage::helper('customattribute')->__('Price') ?><b><?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); echo  " (". Mage::app()->getLocale()->currency( $currency_code )->getSymbol().")"; ?></b></li>
+                                <?php	}
+                                ?>
+                                <li><?php echo Mage::helper('customattribute')->__('Action') ?></li>
+                                <li>
+                                    <button class="button addtierprice" title="Add" type="button">
+									<span>
+										<span><?php echo Mage::helper('customattribute')->__('Add') ?></span>
+									</span>
+                                    </button>
+                                </li>
+                            </ul>
+                            <ul class="wk_mp_headcus">
+                                <li>
+                                    <select name="tier_price[<?php echo $t ?>][cust_group]" >
+                                        <option value="32000">ALL GROUPS</option>
+                                        <?php  $customer_group = Mage::getModel('customer/group')->getCollection();
+                                        foreach($customer_group as $group){ ?>
+                                            <option value="<?php echo $group->getCustomerGroupId(); ?>"><?php echo $group->getCustomerGroupCode(); ?></option>
+                                        <?php }	?>
+                                    </select>
+                                </li>
+                                <li>
+                                    <div class="input-box">
+                                        <input class="input-text" type="text" name="tier_price[<?php echo $t ?>][price_qty]" onKeyPress="return numbersonly(this, event, true);">
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-box">
+                                        <input type="text" class="input-text tierprice"  name="tier_price[<?php echo $t ?>][price]" onKeyPress="return numbersonly(this, event, true);" >
+                                    </div>
+                                </li>
+                                <li>
+                                    <button class="button delete" title="Delete" type="button">
+									<span>
+										<span><?php echo Mage::helper('customattribute')->__('Delete') ?></span>
+									</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <?php $t++; ?>
+                <?php }
+            }
+        } }	?>
+    <script id="wk_customattr_template" type="text/x-handlebars-template">
+        <ul class="wk_mp_headcus">
+            <li>
+                <select name="tier_price[${index}][cust_group]" >
+                    <option value="32000">ALL GROUPS</option>
+				<?php  $customer_group = Mage::getModel('customer/group')->getCollection(); 
+						foreach($customer_group as $group){ ?>
+							<option value="<?php echo $group->getCustomerGroupId(); ?>"><?php echo $group->getCustomerGroupCode(); ?></option>
+						<?php }	?>
+			</select>
+            </li>
+            <li>
+                <div class="input-box">
+                    <input class="input-text" type="text" name="tier_price[${index}][price_qty]" onKeyPress="return numbersonly(this, event, true);">
+                </div>
+            </li>
+            <li>
+                <div class="input-box">
+                    <input type="text" class="input-text validate-zero-or-greater tierprice" name="tier_price[${index}][price]">
+                </div>
+            </li>
+            <li>
+                <button class="button delete" title="Delete" type="button">
+				<span>
+					<span><?php echo Mage::helper('customattribute')->__('Delete') ?></span>
+				</span>
+                </button>
+            </li>
+        </ul>
+    </script>
+    <script id="wk_producttax_template" type="text/x-jquery-tmpl">
+	<ul class="wk_mp_headcus">
+		<li>
+			<select name="<?php echo $taxtype; ?>[${index}][country]" class="country">
+				<?php  $countryList = Mage::getModel('directory/country')->getResourceCollection()
+            ->loadByStore()
+            ->toOptionArray(true);
+        foreach($countryList as $value){
+            if($value['value']!='' ){
+                ?>
+							<option value="<?php echo $value['value']; ?>"><?php echo $value['label'] ?></option>
+							<?php }
+        }	?>
+			</select>
+			<select name="<?php echo $taxtype; ?>[${index}][state]" class="state">
+				<option value="0">*</option>
+			</select>
+		</li>
+		<li>
+			<div class="input-box">
+				<input class="input-text" type="text" name="<?php echo $taxtype; ?>[${index}][price]" onKeyPress="return numbersonly(this, event, true);">
+			</div>
+		</li>
+		<li>
+			<div class="input-box">
+				<input class="input-text" type="hidden" name="<?php echo $taxtype; ?>[${index}][website_id]" value="0" />
+			</div>
+		</li>
+		<li>
+			<button class="button taxdelete" title="Delete" type="button">
+				<span>
+					<span><?php echo Mage::helper('customattribute')->__('Delete') ?></span>
+				</span>
+			</button>
+		</li>
+	</ul>
+</script>
+    <script src="<?php echo $this->getSkinUrl('marketplace/js/jquery.tmpl.min.js') ?>" type="text/javascript"></script>
+    <script>
+        jQuery.noConflict();
+        (function(jQuery){
+
+            jQuery(document).on('change','.country',function(){
+                var thiss=jQuery(this);
+                var country=jQuery(this).val();
+                jQuery.ajax({
+                    type: "POST",
+                    url:'<?php echo $this->getUrl('customattribute/index/getregiondata') ?>',
+                    dataType: "JSON",
+                    data: {
+                        country: country
+                    },
+                    success: function(response) {
+                        if(jQuery(thiss).next().children().length){
+                            jQuery(thiss).next().children().remove();
+                            jQuery(thiss).next().append("<option value='0'>*</option>");
+                        }
+                        var i=0;
+                        jQuery.each(response,function(key,value){
+                            jQuery(thiss).next().append("<option value="+response[i]['region_id']+">"+response[i]['name']+"</option>");
+                            i++;
+                        })
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+
+            });
+            if('<?php echo $isbundle ?>' =='bundle'){
+                jQuery('.tierprice').on('keyup',function(){
+                    if(jQuery(this).val()>100){
+                        console.log(jQuery(this).val());
+                        alert('please enter value less then 100');
+                        jQuery(this).val('');
+                    }
+                });
+            }
+
+
+            var count_of_link_row = 0;
+            var tier_count=<?php echo $t;?>;
+            jQuery(function(){
+                jQuery(".datetype").datepicker();
+            });
+            jQuery('.tierprice').delegate('.addtierprice','click',function(){
+                jQuery("#wk_customattr_template").tmpl([{'index':tier_count}]).appendTo(".tierprice .wk_mp_option-box");
+                tier_count++;
+                // var source = jQuery("#wk_customattr_template").html();
+                // var template = Handlebars.compile(source);
+                // jQuery('.tierprice .wk_mp_option-box').append(template);
+            });
+
+            jQuery('.producttax').delegate('.addproducttax','click',function(){
+
+                jQuery("#wk_producttax_template").tmpl([{'index':count_of_link_row}]).appendTo(".producttax");
+                count_of_link_row++;
+            });
+            var count = 1;
+            // jQuery( "#special_from_date" ).datepicker();
+            // jQuery( "#special_to_date" ).datepicker();
+
+            jQuery('body').delegate('.delete-product-option','click',function(event){
+                jQuery(this).parent().parent().remove();
+            });
+            jQuery('.tierprice').delegate('.delete','click',function(){
+                jQuery(this).parents('.wk_mp_headcus').remove();
+            });
+
+            jQuery('.producttax').delegate('.taxdelete','click',function(){
+                jQuery(this).parents('.wk_mp_headcus').remove();
+            });
+        })(jQuery);
+
+        function numbersonly(myfield, e, dec){
+            var key;
+            var keychar;
+            if (window.event)
+                key = window.event.keyCode;
+            else if (e)
+                key = e.which;
+            else
+                return true;
+            keychar = String.fromCharCode(key);
+            if ((key==null) || (key==0) || (key==8) ||
+                (key==9) || (key==13) || (key==27) )
+                return true;
+            else if ((("0123456789").indexOf(keychar) > -1))
+                return true;
+            else
+                return false;
+        }
+    </script>
+<?php } ?>
